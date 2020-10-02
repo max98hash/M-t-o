@@ -1,0 +1,27 @@
+.l1{
+    display: inline-block;
+}
+
+.vent{
+    display: inline-block;
+}
+
+
+#mapid { 
+    height: 300px;
+    width: 300px; 
+}
+
+.container{
+    background: #2B6F75;
+    margin-top: 50px;
+    border-radius: 25px;
+    padding-top: 10px;
+    padding-bottom: 25px;
+}
+
+.row{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
