@@ -41,35 +41,25 @@ function getCity(){
 }
 
 function getWeather(ville){
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            var response = JSON.parse(this.responseText);
-            console.log(response);
-            displayWeather(response);
-        }
-    };
-    request.open("GET", "https://www.prevision-meteo.ch/services/json/"+ville);
-    request.send();
+    fetch("https://www.prevision-meteo.ch/services/json/"+ville)
+        .then(resp => resp.json())
+        .then(json => displayWeather(json));
+
 }
 
 function getWeatherLatLong(lat,lng){
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            var response = JSON.parse(this.responseText);
-            console.log(response);
-            displayWeather(response);
-        }
-    };
-    request.open("GET", "https://www.prevision-meteo.ch/services/json/lat="+lat+"lng="+lng);
-    request.send();
+    fetch("https://www.prevision-meteo.ch/services/json/lat="+lat+"lng="+lng)
+        .then(resp => resp.json())
+        .then(json => displayWeather(json));
+
 }
+
 
 function displayWeather(data){
 
-    let div = document.querySelector("#data");
-    div.innerHTML="";
+
+    let div = document.createElement("div");
+    div.id="data";
 
     let l1 = document.createElement("div");
     let ville = document.createElement("h1");
@@ -92,16 +82,20 @@ function displayWeather(data){
     let condition = document.createElement("p");
     condition.innerHTML=data.current_condition.condition;
     condition.className="l1"
-    let img = document.createElement("img");
-    img.src=data.current_condition.icon;
-    img.className="l1"
-    l2.appendChild(img);
     l2.appendChild(condition);
     div.appendChild(l2);
 
+    let limg = document.createElement("div");
+    limg.className="row d-flex justify-content-center align-middle";
+    let img = document.createElement("img");
+    img.src=data.current_condition.icon_big;
+    img.className="l1"
+    limg.appendChild(img);
+    div.appendChild(limg);
+
     let l3 = document.createElement("div");
     l3.className="row d-flex justify-content-center align-middle";
-    let temperature = document.createElement("p");
+    let temperature = document.createElement("label");
     temperature.innerHTML="Température : "+data.current_condition.tmp.toString()+"°C";
     l3.appendChild(temperature);
     div.appendChild(l3);
@@ -114,7 +108,7 @@ function displayWeather(data){
     l4.appendChild(vent);
 
     let direction = document.createElement("p");
-    direction.innerHTML="Direction : "+data.current_condition.wnd_dir;
+    direction.innerHTML=" Direction : "+data.current_condition.wnd_dir;
     direction.className="vent";
     l4.appendChild(direction);
     div.appendChild(l4);
@@ -132,4 +126,16 @@ function displayWeather(data){
     pression.innerHTML="Humidité : "+data.current_condition.pressure.toString()+"Pa";
     l6.appendChild(pression);
     div.appendChild(l6);
+
+
+    let res = document.createElement("div");
+    res.className="col-auto";
+    res.id="res";
+    res.appendChild(div);
+
+    let put = document.querySelector("#put");
+    if(put.childElementCount>1){
+        put.removeChild(put.lastChild);
+    }
+    put.appendChild(res);
 }

@@ -12,12 +12,13 @@
     width: 300px; 
 }
 
-.container{
+.container-fluid{
     background: #2B6F75;
     margin-top: 50px;
     border-radius: 25px;
     padding-top: 10px;
     padding-bottom: 25px;
+    width: 80%;
 }
 
 .row{
@@ -25,3 +26,21 @@
     padding-bottom: 5px;
 }
 
+body{
+    background-color: #353231;
+}
+
+#res{
+    background-color: aliceblue;
+    margin : 0px 25px 25px 25px;
+    padding : 20px 50px 20px 50px;
+    border-radius: 30px;
+}
+
+
+#form{
+    background-color: blueviolet;
+    margin : 0px 25px 25px 25px;
+    padding : 20px 50px 20px 50px;
+    border-radius: 30px;
+}
