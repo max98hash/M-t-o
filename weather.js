@@ -1,10 +1,26 @@
-let btn = document.querySelector("#btn");
 let ville = "";
 let setup = document.querySelector("#ville");
 setup.value="Bordeaux";
 
+let btn = document.querySelector("#btn");
 btn.addEventListener("click", function() {
-    getCity();
+    getCity("current");
+});
+
+let prev1 = document.querySelector("#prev1");
+prev1.addEventListener("click", function() {
+    getCity("J+1");
+});
+
+
+let prev2 = document.querySelector("#prev2");
+prev2.addEventListener("click", function() {
+    getCity("J+2");
+});
+
+let prev3 = document.querySelector("#prev3");
+prev3.addEventListener("click", function() {
+    getCity("J+3");
 });
 
 setUpMap();
@@ -31,19 +47,37 @@ function setUpMap(){
 
 }
 
-function getCity(){
+function getCity(time){
     let input = document.querySelector("#ville");
     if(input.value!=""){
         ville = input.value;
     }
     console.log(ville);
-    getWeather(ville);
+    if(ville!=""){
+        getWeather(ville,time);
+    }
 }
 
-function getWeather(ville){
+function getWeather(ville,time){
     fetch("https://www.prevision-meteo.ch/services/json/"+ville)
         .then(resp => resp.json())
-        .then(json => displayWeather(json));
+        .then(json => {
+            if(time=="current"){
+                displayWeather(json)
+            }
+            else if(time=="J+1"){
+                displayPrevision(json.fcst_day_1);
+                console.log(json.fcst_day_1);
+            }
+            else if(time=="J+2"){
+                displayPrevision(json.fcst_day_2);
+                console.log(json.fcst_day_2);
+            }
+            else{
+                displayPrevision(json.fcst_day_3);
+                console.log(json.fcst_day_3);
+            }
+        });
 
 }
 
@@ -55,7 +89,6 @@ function getWeatherLatLong(lat,lng){
 }
 
 function displayCityAndHour(data){
-    let line1 = document.createElement("div");
     let ville = document.createElement("h1");
 
     if(data.city_info.name=="NA"){
@@ -63,11 +96,8 @@ function displayCityAndHour(data){
     }else{
         ville.innerText=data.city_info.name;
     }
-
-    line1.className="row d-flex justify-content-center align-middle";
-    line1.appendChild(ville);
     
-    return line1;
+    return ville;
 }
 
 function displayHour(data_hour){
@@ -77,43 +107,31 @@ function displayHour(data_hour){
 }
 
 function displayCondition(condition_data){
-    let line2 = document.createElement("div");
-    line2.className="row d-flex justify-content-center align-middle";
     let condition = document.createElement("p");
     condition.innerHTML=condition_data;
-    line2.appendChild(condition);
 
-    return line2;
+    return condition;
 }
 
 function displayConditionImg(img_data){
-    let lineimg = document.createElement("div");
-    lineimg.className="row d-flex justify-content-center align-middle";
     let img = document.createElement("img");
     img.src=img_data;
-    lineimg.appendChild(img);
 
-    return lineimg;
+    return img;
 }
 
 function displayTemperature(tmp_data){
-    let line3 = document.createElement("div");
-    line3.className="row d-flex justify-content-center align-middle";
     let temperature = document.createElement("p");
     temperature.innerHTML=tmp_data.toString()+"°C";
-    line3.appendChild(temperature);
 
-    return line3;
+    return temperature;
 }
 
 function displayWind(data_wind){
-    let line4 = document.createElement("div");
-    line4.className="row d-flex justify-content-center align-middle";
     let vent = document.createElement("p");
     vent.innerHTML="Vent : "+data_wind.toString()+"km/h";
-    line4.appendChild(vent);
 
-    return line4;
+    return vent;
 }
 
 function displayWindDirection(data_wind_dir){
@@ -123,54 +141,43 @@ function displayWindDirection(data_wind_dir){
 }
 
 function displayHumidity(data_humidity){
-    let line5 = document.createElement("div");
-    line5.className="row d-flex justify-content-center align-middle";
     let humidite = document.createElement("p");
     humidite.innerHTML="Humidité : "+data_humidity.toString()+"%";
-    line5.appendChild(humidite);
 
-    return line5;
+    return humidite;
 }
 
 function displayPressure(data_pressure){
-    let line6 = document.createElement("div");
-    line6.className="row d-flex justify-content-center align-middle";
     let pression = document.createElement("p");
     pression.innerHTML="Pression : "+data_pressure.toString()+"Pa";
-    line6.appendChild(pression);
 
-    return line6
+    return pression
 }
 
 
 function displayWeather(data){
 
-    let div = document.createElement("div");
-    div.id="data";
-
-    div.appendChild(displayCityAndHour(data));
-
-    div.appendChild(displayHour(data.current_condition.hour));
-
-    div.appendChild(displayCondition(data.current_condition.condition));
-
-    div.appendChild(displayConditionImg(data.current_condition.icon_big));
-
-    div.appendChild(displayTemperature(data.current_condition.tmp));
-
-    div.appendChild(displayWind(data.current_condition.wnd_spd));
-
-    div.appendChild(displayWindDirection(data.current_condition.wnd_dir));
-
-    div.appendChild(displayHumidity(data.current_condition.humidity));
-
-    div.appendChild(displayPressure(data.current_condition.pressure));
-
-
     let res = document.createElement("div");
-    res.className="flex-col d-flex justify-content-center";
+    res.className="d-flex align-items-center flex-column";
     res.id="res";
-    res.appendChild(div);
+
+    res.appendChild(displayCityAndHour(data));
+
+    res.appendChild(displayHour(data.current_condition.hour));
+
+    res.appendChild(displayCondition(data.current_condition.condition));
+
+    res.appendChild(displayConditionImg(data.current_condition.icon_big));
+
+    res.appendChild(displayTemperature(data.current_condition.tmp));
+
+    res.appendChild(displayWind(data.current_condition.wnd_spd));
+
+    res.appendChild(displayWindDirection(data.current_condition.wnd_dir));
+
+    res.appendChild(displayHumidity(data.current_condition.humidity));
+
+    res.appendChild(displayPressure(data.current_condition.pressure));
 
     let put = document.querySelector("#put");
     if(put.childElementCount>1){
@@ -178,3 +185,26 @@ function displayWeather(data){
     }
     put.appendChild(res);
 }
+
+
+function displayPrevision(data){
+
+    let res = document.createElement("div");
+    res.className="d-flex align-items-center flex-column";
+    res.id="res";
+
+    //res.appendChild(displayCityAndHour(data));
+
+
+
+    res.appendChild(displayCondition(data.condition));
+
+    res.appendChild(displayConditionImg(data.icon_big));
+
+    let put = document.querySelector("#put");
+    if(put.childElementCount>1){
+        put.removeChild(put.lastChild);
+    }
+    put.appendChild(res);
+}
+
