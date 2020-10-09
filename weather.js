@@ -54,82 +54,121 @@ function getWeatherLatLong(lat,lng){
 
 }
 
-
-function displayWeather(data){
-
-
-    let div = document.createElement("div");
-    div.id="data";
-
-    let l1 = document.createElement("div");
+function displayCityAndHour(data){
+    let line1 = document.createElement("div");
     let ville = document.createElement("h1");
+
     if(data.city_info.name=="NA"){
         ville.innerText=data.city_info.latitude+","+data.city_info.longitude;
     }else{
         ville.innerText=data.city_info.name;
     }
-    l1.className="row d-flex justify-content-center align-middle";
-    l1.appendChild(ville);
 
+    line1.className="row d-flex justify-content-center align-middle";
+    line1.appendChild(ville);
+    
+    return line1;
+}
+
+function displayHour(data_hour){
     let heure = document.createElement("p");
-    heure.innerHTML=data.current_condition.hour;
-    l1.appendChild(heure);
+    heure.innerHTML=data_hour;
+    return heure;
+}
 
-    div.appendChild(l1);
-
-    let l2 = document.createElement("div");
-    l2.className="row d-flex justify-content-center align-middle";
+function displayCondition(condition_data){
+    let line2 = document.createElement("div");
+    line2.className="row d-flex justify-content-center align-middle";
     let condition = document.createElement("p");
-    condition.innerHTML=data.current_condition.condition;
-    condition.className="l1"
-    l2.appendChild(condition);
-    div.appendChild(l2);
+    condition.innerHTML=condition_data;
+    line2.appendChild(condition);
 
-    let limg = document.createElement("div");
-    limg.className="row d-flex justify-content-center align-middle";
+    return line2;
+}
+
+function displayConditionImg(img_data){
+    let lineimg = document.createElement("div");
+    lineimg.className="row d-flex justify-content-center align-middle";
     let img = document.createElement("img");
-    img.src=data.current_condition.icon_big;
-    img.className="l1"
-    limg.appendChild(img);
-    div.appendChild(limg);
+    img.src=img_data;
+    lineimg.appendChild(img);
 
-    let l3 = document.createElement("div");
-    l3.className="row d-flex justify-content-center align-middle";
-    let temperature = document.createElement("label");
-    temperature.innerHTML="Température : "+data.current_condition.tmp.toString()+"°C";
-    l3.appendChild(temperature);
-    div.appendChild(l3);
+    return lineimg;
+}
 
-    let l4 = document.createElement("div");
-    l4.className="row d-flex justify-content-center align-middle";
+function displayTemperature(tmp_data){
+    let line3 = document.createElement("div");
+    line3.className="row d-flex justify-content-center align-middle";
+    let temperature = document.createElement("p");
+    temperature.innerHTML=tmp_data.toString()+"°C";
+    line3.appendChild(temperature);
+
+    return line3;
+}
+
+function displayWind(data_wind){
+    let line4 = document.createElement("div");
+    line4.className="row d-flex justify-content-center align-middle";
     let vent = document.createElement("p");
-    vent.innerHTML="Vent : "+data.current_condition.wnd_spd.toString()+"km/h";
-    vent.className="vent";
-    l4.appendChild(vent);
+    vent.innerHTML="Vent : "+data_wind.toString()+"km/h";
+    line4.appendChild(vent);
 
+    return line4;
+}
+
+function displayWindDirection(data_wind_dir){
     let direction = document.createElement("p");
-    direction.innerHTML=" Direction : "+data.current_condition.wnd_dir;
-    direction.className="vent";
-    l4.appendChild(direction);
-    div.appendChild(l4);
+    direction.innerHTML=" Direction : "+data_wind_dir;
+    return direction;
+}
 
-    let l5 = document.createElement("div");
-    l5.className="row d-flex justify-content-center align-middle";
+function displayHumidity(data_humidity){
+    let line5 = document.createElement("div");
+    line5.className="row d-flex justify-content-center align-middle";
     let humidite = document.createElement("p");
-    humidite.innerHTML="Humidité : "+data.current_condition.humidity.toString()+"%";
-    l5.appendChild(humidite);
-    div.appendChild(l5);
+    humidite.innerHTML="Humidité : "+data_humidity.toString()+"%";
+    line5.appendChild(humidite);
 
-    let l6 = document.createElement("div");
-    l6.className="row d-flex justify-content-center align-middle";
+    return line5;
+}
+
+function displayPressure(data_pressure){
+    let line6 = document.createElement("div");
+    line6.className="row d-flex justify-content-center align-middle";
     let pression = document.createElement("p");
-    pression.innerHTML="Humidité : "+data.current_condition.pressure.toString()+"Pa";
-    l6.appendChild(pression);
-    div.appendChild(l6);
+    pression.innerHTML="Pression : "+data_pressure.toString()+"Pa";
+    line6.appendChild(pression);
+
+    return line6
+}
+
+
+function displayWeather(data){
+
+    let div = document.createElement("div");
+    div.id="data";
+
+    div.appendChild(displayCityAndHour(data));
+
+    div.appendChild(displayHour(data.current_condition.hour));
+
+    div.appendChild(displayCondition(data.current_condition.condition));
+
+    div.appendChild(displayConditionImg(data.current_condition.icon_big));
+
+    div.appendChild(displayTemperature(data.current_condition.tmp));
+
+    div.appendChild(displayWind(data.current_condition.wnd_spd));
+
+    div.appendChild(displayWindDirection(data.current_condition.wnd_dir));
+
+    div.appendChild(displayHumidity(data.current_condition.humidity));
+
+    div.appendChild(displayPressure(data.current_condition.pressure));
 
 
     let res = document.createElement("div");
-    res.className="col-auto";
+    res.className="flex-col d-flex justify-content-center";
     res.id="res";
     res.appendChild(div);
 

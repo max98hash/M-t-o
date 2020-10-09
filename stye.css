@@ -2,10 +2,6 @@
     display: inline-block;
 }
 
-.vent{
-    display: inline-block;
-}
-
 
 #mapid { 
     height: 300px;
@@ -43,4 +39,9 @@ body{
     margin : 0px 25px 25px 25px;
     padding : 20px 50px 20px 50px;
     border-radius: 30px;
+}
+
+p{
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
